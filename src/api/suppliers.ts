@@ -142,10 +142,10 @@ export async function fetchSupplierSummary(signal?: AbortSignal) {
       rows.filter((row) => row.status === status).length,
     ]),
   ) as Record<SupplierStatus, number>;
-  const highRiskOpen = rows.filter(
-    (row) => row.risk_level === 'high' && ['submitted', 'in_review'].includes(row.status),
+  const highRiskSubmitted = rows.filter(
+    (row) => row.risk_level === 'high' && row.status === 'submitted',
   ).length;
-  return { byStatus, highRiskOpen, total: rows.length };
+  return { byStatus, highRiskSubmitted, total: rows.length };
 }
 
 export type SupplierPatch = Partial<

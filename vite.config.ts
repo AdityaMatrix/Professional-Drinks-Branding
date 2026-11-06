@@ -10,6 +10,9 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: './src/test/setup.ts',
+    // Typing through forms is slow in jsdom. These stop a busy machine failing tests on timing.
+    testTimeout: 20_000,
+    maxWorkers: 4,
     css: { modules: { classNameStrategy: 'non-scoped' } },
     // Placeholders so tests run in CI. Nothing in the suite talks to a real project.
     env: {

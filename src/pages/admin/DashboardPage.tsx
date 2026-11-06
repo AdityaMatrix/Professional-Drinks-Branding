@@ -57,8 +57,8 @@ export function DashboardPage() {
             className={`${styles.card} ${styles.cardAlert}`}
             to="/admin/suppliers?risk=high&status=submitted"
           >
-            <span className={styles.cardValue}>{summary.data.highRiskOpen}</span>
-            High risk awaiting a decision
+            <span className={styles.cardValue}>{summary.data.highRiskSubmitted}</span>
+            High risk awaiting review
           </Link>
           {(Object.keys(statusLabels) as SupplierStatus[]).map((status) => (
             <Link key={status} className={styles.card} to={`/admin/suppliers?status=${status}`}>
