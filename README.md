@@ -82,6 +82,30 @@ The payment form only accepts published test cards, so a real number can't be us
 - **Tests failed only when the machine was low on memory.** The code was fine, but the timeouts
   were too tight. I confirmed that by running with fewer workers, then made the suite more tolerant.
 
+## Performance
+
+Lighthouse mobile scores for the live home page. The rebuilt columns are the median of three runs,
+and the original site is a single run.
+
+| | Original site | Rebuilt, no intro | Rebuilt, first visit |
+| --- | --- | --- | --- |
+| Performance | 29 | 95 | 85 |
+| Largest Contentful Paint | 12.2 s | 2.7 s | 4.1 s |
+| Total Blocking Time | 12,270 ms | 42 ms | 93 ms |
+| Page weight | 10,295 KiB | 721 KiB | 6,226 KiB |
+
+"No intro" was measured with reduced motion on, as the closest stand-in for a refresh. The first
+visit score is kinder than the experience: the page isn't revealed until the 6.6 second intro ends,
+at about 8.7 seconds in my testing, and the video is most of that page weight.
+
+What made the difference:
+
+- Trimmed and converted the images, from about 10.5 MB to under 600 KB
+- Replaced a third-party typing library with a small hook
+- Loaded Supabase on first use, taking the main bundle from 184 KB to 133 KB gzipped
+- Stopped the font stylesheet blocking the first paint
+- Only download the intro video when it's going to play
+
 ## Accessibility
 
 - Everything works by keyboard, with visible focus and a skip link
@@ -122,7 +146,9 @@ browser matter.
 
 - The intro video adds about 7 seconds to the first visit in a session. That's a deliberate branding
   choice, and it can be skipped.
-- The Supabase free plan pauses inactive projects, so the API may need a moment to wake up.
+- GitHub Pages has no server routing, so direct links like `/products` load the app through its
+  404 page. They work normally, but the HTTP status is 404, which a real host would fix.
+- The Supabase free plan can pause inactive projects, which would stop the API until it's restored.
 - The demo account is shared, so anyone can change the sample suppliers. Reset them from the
   dashboard.
 - The morph transition needs a browser that supports the View Transitions API. Other browsers
