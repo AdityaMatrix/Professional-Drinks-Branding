@@ -67,6 +67,10 @@
   font-weight: 600;
 }
 
+.shop {
+  margin-top: var(--space-4);
+}
+
 .figure {
   position: absolute;
   top: 0;

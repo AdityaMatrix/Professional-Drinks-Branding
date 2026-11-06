@@ -1,31 +1,35 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { sendContactMessage } from '../api/contact';
+import { ContactRejectedError, sendContactMessage } from '../api/contact';
 import { contactSchema, type ContactValues } from '../data/contactSchema';
 import { TextField } from './TextField';
 import styles from './ContactForm.module.css';
 
-type SubmitStatus = 'idle' | 'sent' | 'failed';
+const SENT = 'Thanks, your message has been sent.';
+const FAILED = 'Your message could not be sent. Please try again.';
 
 export function ContactForm() {
-  const [status, setStatus] = useState<SubmitStatus>('idle');
+  const [status, setStatus] = useState('');
   const {
     register,
     handleSubmit,
     reset,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<ContactValues>({ resolver: zodResolver(contactSchema) });
 
   const onSubmit = async (values: ContactValues) => {
-    setStatus('idle');
+    setStatus('');
     try {
       await sendContactMessage(values);
       reset();
-      setStatus('sent');
-    } catch {
+      setStatus(SENT);
+    } catch (error) {
       // Values stay in the form, so a failed send never costs someone their message.
-      setStatus('failed');
+      if (!(error instanceof ContactRejectedError)) setStatus(FAILED);
+      else if (error.field) setError(error.field, { message: error.message }, { shouldFocus: true });
+      else setStatus(error.message);
     }
   };
 
@@ -63,8 +67,7 @@ export function ContactForm() {
       </button>
 
       <p className={styles.status} role="status">
-        {status === 'sent' && 'Thanks, your message has been sent.'}
-        {status === 'failed' && 'Your message could not be sent. Please try again.'}
+        {status}
       </p>
     </form>
   );

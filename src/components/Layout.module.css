@@ -48,8 +48,26 @@
   text-decoration: underline;
 }
 
+.badge {
+  display: inline-block;
+  min-width: 1.4em;
+  margin-left: var(--space-1);
+  padding-inline: var(--space-1);
+  border-radius: 999px;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-body);
+  font-size: 0.75em;
+  font-weight: 600;
+  text-align: center;
+}
+
 .main:focus {
   outline: none;
+}
+
+.routeFallback {
+  min-height: 70svh;
 }
 
 .footer {

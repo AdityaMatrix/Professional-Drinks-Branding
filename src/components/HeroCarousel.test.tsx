@@ -1,6 +1,14 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import { drinks } from '../data/drinks';
+import { MemoryRouter } from 'react-router';
+import { fallbackProducts } from '../data/products';
 import { HeroCarousel } from './HeroCarousel';
+
+const renderCarousel = () =>
+  render(
+    <MemoryRouter>
+      <HeroCarousel products={fallbackProducts} />
+    </MemoryRouter>,
+  );
 
 const activeName = () => document.querySelector('[data-slot="active"] h2')?.textContent;
 
@@ -14,7 +22,7 @@ describe('HeroCarousel', () => {
   });
 
   it('moves with the next and previous buttons', () => {
-    render(<HeroCarousel drinks={drinks} />);
+    renderCarousel();
     expect(activeName()).toBe('Pink Blaze');
 
     fireEvent.click(screen.getByRole('button', { name: 'Next drink' }));
@@ -25,7 +33,7 @@ describe('HeroCarousel', () => {
   });
 
   it('advances on its own every 5 seconds', () => {
-    render(<HeroCarousel drinks={drinks} />);
+    renderCarousel();
     act(() => {
       vi.advanceTimersByTime(5000);
     });
@@ -33,7 +41,7 @@ describe('HeroCarousel', () => {
   });
 
   it('stops advancing when paused and resumes when played', () => {
-    render(<HeroCarousel drinks={drinks} />);
+    renderCarousel();
 
     fireEvent.click(screen.getByRole('button', { name: 'Pause slideshow' }));
     act(() => {
@@ -49,7 +57,7 @@ describe('HeroCarousel', () => {
   });
 
   it('pauses while the pointer is over it', () => {
-    render(<HeroCarousel drinks={drinks} />);
+    renderCarousel();
     fireEvent.mouseEnter(screen.getByRole('region', { name: 'Our drinks' }));
     act(() => {
       vi.advanceTimersByTime(20000);
@@ -58,7 +66,7 @@ describe('HeroCarousel', () => {
   });
 
   it('restarts the countdown after a manual move', () => {
-    render(<HeroCarousel drinks={drinks} />);
+    renderCarousel();
     act(() => {
       vi.advanceTimersByTime(4000);
     });
@@ -71,7 +79,7 @@ describe('HeroCarousel', () => {
 
   // jsdom has no accessibility tree, so this checks the attribute browsers act on.
   it('marks every slide except the active one as inert', () => {
-    render(<HeroCarousel drinks={drinks} />);
+    renderCarousel();
     const slides = [...document.querySelectorAll('[data-slot]')];
 
     expect(slides.filter((slide) => !slide.hasAttribute('inert'))).toEqual([

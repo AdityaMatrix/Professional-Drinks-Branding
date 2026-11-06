@@ -1,9 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { sendContactMessage } from '../api/contact';
+import { ContactRejectedError, sendContactMessage } from '../api/contact';
 import { ContactForm } from './ContactForm';
 
-vi.mock('../api/contact', () => ({ sendContactMessage: vi.fn() }));
+vi.mock('../lib/supabase', () => ({ supabase: {} }));
+vi.mock('../api/contact', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../api/contact')>()),
+  sendContactMessage: vi.fn(),
+}));
 const send = vi.mocked(sendContactMessage);
 
 async function fillValidForm(user: ReturnType<typeof userEvent.setup>) {
@@ -67,6 +71,31 @@ describe('ContactForm', () => {
 
     expect(await screen.findByText(/has been sent/)).toBeInTheDocument();
     expect(screen.getByLabelText('Name')).toHaveValue('');
+  });
+
+  it('shows a server rejection on the field it belongs to', async () => {
+    const user = userEvent.setup();
+    send.mockRejectedValue(new ContactRejectedError('Enter a valid email address', 'email'));
+    render(<ContactForm />);
+    await fillValidForm(user);
+
+    await user.click(screen.getByRole('button', { name: 'Send message' }));
+
+    await screen.findByText('Enter a valid email address');
+    expect(screen.getByLabelText('Email')).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByLabelText('Email')).toHaveFocus();
+  });
+
+  it('shows a rate limit message and keeps what was typed', async () => {
+    const user = userEvent.setup();
+    send.mockRejectedValue(new ContactRejectedError('Please wait a minute'));
+    render(<ContactForm />);
+    await fillValidForm(user);
+
+    await user.click(screen.getByRole('button', { name: 'Send message' }));
+
+    expect(await screen.findByText('Please wait a minute')).toBeInTheDocument();
+    expect(screen.getByLabelText('Name')).toHaveValue('Sova');
   });
 
   it('keeps what was typed when sending fails', async () => {

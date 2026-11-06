@@ -1,27 +1,35 @@
-import { useEffect } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
 import { Link, Outlet, useLocation } from 'react-router';
 import logo from '../assets/images/logo.webp';
+import { useCart } from '../cart/CartContext';
 import styles from './Layout.module.css';
 
 const navLinks = [
-  { to: '/', label: 'Home' },
+  { to: '/products', label: 'Shop' },
   { to: '/#about', label: 'About' },
   { to: '/#inspirations', label: 'Inspirations' },
   { to: '/#contact', label: 'Contact' },
 ];
 
 /** The router doesn't scroll to hash targets itself. Keyed on location.key so repeat clicks work. */
-function useScrollToHash() {
-  const { hash, key } = useLocation();
+function useScrollOnNavigate() {
+  const { pathname, search, hash, key } = useLocation();
+  const previous = useRef({ pathname, search });
 
   useEffect(() => {
+    // Changing a filter only edits the query string, and must not jump the page to the top.
+    const onlyFiltersChanged =
+      previous.current.pathname === pathname && previous.current.search !== search;
+    previous.current = { pathname, search };
+
     if (hash) document.getElementById(hash.slice(1))?.scrollIntoView();
-    else window.scrollTo(0, 0);
-  }, [hash, key]);
+    else if (!onlyFiltersChanged) window.scrollTo(0, 0);
+  }, [pathname, search, hash, key]);
 }
 
 export function Layout() {
-  useScrollToHash();
+  useScrollOnNavigate();
+  const { count } = useCart();
 
   return (
     <>
@@ -39,12 +47,19 @@ export function Layout() {
                 <Link to={link.to}>{link.label}</Link>
               </li>
             ))}
+            <li>
+              <Link to="/cart" aria-label={`Cart, ${count} ${count === 1 ? 'item' : 'items'}`}>
+                Cart{count > 0 && <span className={styles.badge}>{count}</span>}
+              </Link>
+            </li>
           </ul>
         </nav>
       </header>
 
       <main id="main" tabIndex={-1} className={styles.main}>
-        <Outlet />
+        <Suspense fallback={<div className={styles.routeFallback} />}>
+          <Outlet />
+        </Suspense>
       </main>
 
       <footer className={styles.footer}>

@@ -1,13 +1,15 @@
 import type { FocusEvent } from 'react';
-import type { Drink } from '../data/drinks';
+import { Link } from 'react-router';
+import { formatPrice, getProductImage, type Product } from '../data/products';
 import { getSlot } from '../hooks/carouselState';
 import { useCarousel } from '../hooks/useCarousel';
+import { buttonClass } from './Button';
 import styles from './HeroCarousel.module.css';
 
-type Props = { drinks: Drink[]; initialIndex?: number };
+type Props = { products: Product[]; initialIndex?: number };
 
-export function HeroCarousel({ drinks, initialIndex = 1 }: Props) {
-  const carousel = useCarousel(drinks.length, initialIndex);
+export function HeroCarousel({ products, initialIndex = 1 }: Props) {
+  const carousel = useCarousel(products.length, initialIndex);
   const { state, pausedByUser, isPlaying } = carousel;
 
   const handleFocus = (event: FocusEvent<HTMLElement>) => {
@@ -34,29 +36,32 @@ export function HeroCarousel({ drinks, initialIndex = 1 }: Props) {
       onBlur={handleBlur}
     >
       <div className={styles.list} aria-live={isPlaying ? 'off' : 'polite'}>
-        {drinks.map((drink, index) => {
-          const slot = getSlot(index, state, drinks.length);
+        {products.map((product, index) => {
+          const slot = getSlot(index, state, products.length);
           return (
             <article
-              key={drink.id}
+              key={product.id}
               className={styles.slide}
               data-slot={slot}
               aria-roledescription="slide"
-              aria-label={`${index + 1} of ${drinks.length}`}
+              aria-label={`${index + 1} of ${products.length}`}
               inert={slot !== 'active'}
             >
-              <div className={styles.panel} style={{ backgroundColor: drink.color }}>
+              <div className={styles.panel} style={{ backgroundColor: product.color }}>
                 <div className={styles.content}>
-                  <h2 className={styles.name}>{drink.name}</h2>
-                  <p className={styles.price}>${drink.priceUsd}</p>
-                  <p className={styles.description}>{drink.description}</p>
+                  <h2 className={styles.name}>{product.name}</h2>
+                  <p className={styles.price}>{formatPrice(product.priceCents)}</p>
+                  <p className={styles.description}>{product.description}</p>
+                  <Link className={`${buttonClass} ${styles.shop}`} to={`/products/${product.id}`}>
+                    View {product.name}
+                  </Link>
                 </div>
               </div>
               <figure className={styles.figure}>
                 <img
                   className={styles.can}
-                  src={drink.image}
-                  alt={drink.imageAlt}
+                  src={getProductImage(product)}
+                  alt={`${product.name} can featuring ${product.agent}`}
                   decoding="async"
                   fetchPriority={index === initialIndex ? 'high' : 'auto'}
                 />
