@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="loading">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,13 +11,114 @@
     <link rel="icon" href="/src/assets/images/logo.webp" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- media="print" stops the font file blocking the first paint, so the loader shows at once. -->
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Anton+SC&family=Poppins:wght@400;600&display=swap"
+      media="print"
+      onload="this.media = 'all'"
     />
+    <!-- Inline so the loader needs nothing else to arrive before it can appear. -->
+    <style>
+      html.loading {
+        overflow: hidden;
+      }
+
+      #loader {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: 28px;
+        background: #0f1923;
+        color: #ece8e3;
+        transition: opacity 0.4s ease;
+      }
+
+      #loader.loader-done {
+        opacity: 0;
+      }
+
+      .loader-logo {
+        width: 132px;
+        height: auto;
+        filter: invert(1);
+        animation: loader-pulse 1.25s ease-in-out infinite alternate;
+      }
+
+      .loader-track {
+        width: min(240px, 60vw);
+        height: 4px;
+        overflow: hidden;
+        background: rgb(255 255 255 / 15%);
+        transform: skewX(-30deg);
+      }
+
+      .loader-bar {
+        height: 100%;
+        background: #ff4763;
+        transform-origin: left;
+        animation: loader-fill 2.5s cubic-bezier(0.3, 0.6, 0.4, 1) forwards;
+      }
+
+      .loader-text {
+        font: 600 0.8125rem/1 system-ui, sans-serif;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+      }
+
+      @keyframes loader-pulse {
+        from {
+          opacity: 0.65;
+        }
+
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes loader-fill {
+        from {
+          transform: scaleX(0);
+        }
+
+        to {
+          transform: scaleX(1);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .loader-logo,
+        .loader-bar {
+          animation: none;
+        }
+      }
+    </style>
+    <noscript>
+      <style>
+        #loader {
+          display: none;
+        }
+      </style>
+    </noscript>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="loader" role="status" aria-label="Loading Valo Drinks">
+      <img class="loader-logo" src="/src/assets/images/logo.webp" alt="" width="132" height="74" />
+      <div class="loader-track"><div class="loader-bar"></div></div>
+      <p class="loader-text">Rule your fears</p>
+    </div>
+    <div id="root" inert></div>
+    <script>
+      // If the app fails to start, don't leave visitors stuck behind the loader.
+      setTimeout(function () {
+        document.getElementById('loader')?.remove();
+        document.getElementById('root')?.removeAttribute('inert');
+        document.documentElement.classList.remove('loading');
+      }, 10000);
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

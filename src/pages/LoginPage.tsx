@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Navigate, useSearchParams } from 'react-router';
 import { z } from 'zod';
+import background from '../assets/images/bg-login.webp';
 import { useAuth } from '../auth/AuthContext';
 import { Button } from '../components/Button';
 import { TextField } from '../components/TextField';
@@ -61,47 +62,50 @@ export function LoginPage() {
   return (
     <div className={styles.page}>
       <title>Log in | Valo Drinks</title>
-      <h1 className={styles.heading}>Supplier portal</h1>
-      <p>Staff only. Review supplier onboarding, risk and compliance.</p>
+      <img className={styles.background} src={background} alt="" fetchPriority="high" />
+      <div className={styles.panel}>
+        <h1 className={styles.heading}>Supplier portal</h1>
+        <p>Staff only. Review supplier onboarding, risk and compliance.</p>
 
-      {demoEmail && demoPassword && (
-        <div className={styles.demo}>
-          <p>
-            <strong>Just looking around?</strong> The demo uses sample data that anyone can edit
-            and reset.
-          </p>
-          <Button onClick={() => void signInAsDemo()} disabled={busy}>
-            {demoPending ? 'Signing in…' : 'Try the demo'}
+        {demoEmail && demoPassword && (
+          <div className={styles.demo}>
+            <p>
+              <strong>Just looking around?</strong> The demo uses sample data that anyone can edit
+              and reset.
+            </p>
+            <Button onClick={() => void signInAsDemo()} disabled={busy}>
+              {demoPending ? 'Signing in…' : 'Try the demo'}
+            </Button>
+          </div>
+        )}
+
+        <form
+          className={styles.form}
+          onSubmit={handleSubmit(({ email, password }) => attempt(email, password))}
+          noValidate
+        >
+          <TextField
+            label="Email"
+            type="email"
+            autoComplete="email"
+            error={errors.email?.message}
+            {...register('email')}
+          />
+          <TextField
+            label="Password"
+            type="password"
+            autoComplete="current-password"
+            error={errors.password?.message}
+            {...register('password')}
+          />
+          <Button type="submit" variant="secondary" disabled={busy}>
+            {isSubmitting ? 'Signing in…' : 'Log in'}
           </Button>
-        </div>
-      )}
-
-      <form
-        className={styles.form}
-        onSubmit={handleSubmit(({ email, password }) => attempt(email, password))}
-        noValidate
-      >
-        <TextField
-          label="Email"
-          type="email"
-          autoComplete="email"
-          error={errors.email?.message}
-          {...register('email')}
-        />
-        <TextField
-          label="Password"
-          type="password"
-          autoComplete="current-password"
-          error={errors.password?.message}
-          {...register('password')}
-        />
-        <Button type="submit" variant="secondary" disabled={busy}>
-          {isSubmitting ? 'Signing in…' : 'Log in'}
-        </Button>
-        <p className={styles.failure} role="alert">
-          {failure}
-        </p>
-      </form>
+          <p className={styles.failure} role="alert">
+            {failure}
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { RouterProvider } from 'react-router';
 import { AuthProvider } from './auth/AuthProvider';
 import { CartProvider } from './cart/CartProvider';
 import { ToastProvider } from './components/Toast';
+import { hideLoader } from './lib/loader';
 import { router } from './router';
 import './styles/global.css';
 
@@ -28,3 +29,5 @@ createRoot(root).render(
     </QueryClientProvider>
   </StrictMode>,
 );
+
+hideLoader();

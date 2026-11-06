@@ -22,6 +22,7 @@ const cards = {
 const backgrounds = {
   'wallpaperflare.com_wallpaper.jpg': 'bg-about',
   '391500-valorant-game-fracture-background-4k-pc-wallpaper.jpg': 'bg-contact',
+  'bg.jpg': 'bg-login',
 };
 
 async function write(pipeline, name) {

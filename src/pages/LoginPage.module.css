@@ -1,12 +1,38 @@
 .page {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: calc(100svh - var(--header-height));
+  padding: var(--space-8) var(--space-4);
+  overflow: hidden;
+  background: #0f1923;
+}
+
+.background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Swapping the two base colours flips the shared Button and TextField for a dark background. */
+.panel {
+  --color-ink: #fff;
+  --color-paper: #0f1923;
+  --field-border: rgb(255 255 255 / 55%);
+  --field-error: var(--color-error);
+
+  position: relative;
   display: grid;
   gap: var(--space-4);
   width: 100%;
   max-width: 440px;
-  min-height: 70svh;
-  margin-inline: auto;
-  padding: var(--space-8) var(--space-4);
-  align-content: start;
+  padding: var(--space-8);
+  border-radius: var(--radius-sm);
+  background: rgb(15 25 35 / 92%);
+  color: var(--color-ink);
+  box-shadow: 0 24px 60px rgb(0 0 0 / 45%);
 }
 
 .heading {
@@ -21,7 +47,7 @@
   gap: var(--space-3);
   padding: var(--space-4);
   border-radius: var(--radius-sm);
-  background: var(--color-sand);
+  background: rgb(255 255 255 / 8%);
 }
 
 .form {
@@ -31,6 +57,12 @@
 
 .failure {
   min-height: 1.5em;
-  color: #b00020;
+  color: var(--color-error);
   font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .panel {
+    padding: var(--space-6) var(--space-4);
+  }
 }
