@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="loading">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,113 +11,106 @@
     <link rel="icon" href="/src/assets/images/logo.webp" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- media="print" stops the font file blocking the first paint, so the loader shows at once. -->
+    <!-- media="print" stops the font file blocking the first paint. -->
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Anton+SC&family=Poppins:wght@400;600&display=swap"
       media="print"
       onload="this.media = 'all'"
     />
-    <!-- Inline so the loader needs nothing else to arrive before it can appear. -->
+    <script>
+      // Decided before the first paint, so a refresh never flashes the intro.
+      (function () {
+        var seen = true;
+        try {
+          seen = sessionStorage.getItem('valo-intro-seen') === '1';
+        } catch (error) {
+          // Storage is blocked, so we couldn't remember. Skip it rather than play every time.
+        }
+        var reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!seen && !reducedMotion) document.documentElement.classList.add('intro');
+      })();
+    </script>
     <style>
-      html.loading {
+      html.intro {
         overflow: hidden;
       }
 
-      #loader {
+      #intro {
+        display: none;
+      }
+
+      html.intro #intro {
         position: fixed;
         inset: 0;
         z-index: 1000;
-        display: grid;
-        place-content: center;
-        justify-items: center;
-        gap: 28px;
+        display: block;
         background: #0f1923;
-        color: #ece8e3;
-        transition: opacity 0.4s ease;
+        transition: opacity 0.6s ease;
       }
 
-      #loader.loader-done {
+      html.intro #intro.intro-done {
         opacity: 0;
       }
 
-      .loader-logo {
-        width: 132px;
-        height: auto;
-        filter: invert(1);
-        animation: loader-pulse 1.25s ease-in-out infinite alternate;
-      }
-
-      .loader-track {
-        width: min(240px, 60vw);
-        height: 4px;
-        overflow: hidden;
-        background: rgb(255 255 255 / 15%);
-        transform: skewX(-30deg);
-      }
-
-      .loader-bar {
+      #intro video {
+        width: 100%;
         height: 100%;
-        background: #ff4763;
-        transform-origin: left;
-        animation: loader-fill 2.5s cubic-bezier(0.3, 0.6, 0.4, 1) forwards;
+        object-fit: cover;
       }
 
-      .loader-text {
-        font: 600 0.8125rem/1 system-ui, sans-serif;
-        letter-spacing: 0.3em;
-        text-transform: uppercase;
+      #intro button {
+        position: absolute;
+        right: 16px;
+        bottom: 16px;
+        min-height: 44px;
+        padding-inline: 16px;
+        border: 0;
+        border-radius: 6px;
+        background: rgb(0 0 0 / 65%);
+        color: #fff;
+        font: 600 1rem system-ui, sans-serif;
+        cursor: pointer;
       }
 
-      @keyframes loader-pulse {
-        from {
-          opacity: 0.65;
-        }
-
-        to {
-          opacity: 1;
-        }
+      #intro button:hover {
+        background: #000;
       }
 
-      @keyframes loader-fill {
-        from {
-          transform: scaleX(0);
-        }
-
-        to {
-          transform: scaleX(1);
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .loader-logo,
-        .loader-bar {
-          animation: none;
-        }
+      #intro button:focus-visible {
+        outline: 3px solid #fff;
+        outline-offset: 2px;
       }
     </style>
-    <noscript>
-      <style>
-        #loader {
-          display: none;
-        }
-      </style>
-    </noscript>
   </head>
   <body>
-    <div id="loader" role="status" aria-label="Loading Valo Drinks">
-      <img class="loader-logo" src="/src/assets/images/logo.webp" alt="" width="132" height="74" />
-      <div class="loader-track"><div class="loader-bar"></div></div>
-      <p class="loader-text">Rule your fears</p>
-    </div>
-    <div id="root" inert></div>
+    <div id="intro"></div>
+    <div id="root"></div>
     <script>
-      // If the app fails to start, don't leave visitors stuck behind the loader.
-      setTimeout(function () {
-        document.getElementById('loader')?.remove();
-        document.getElementById('root')?.removeAttribute('inert');
-        document.documentElement.classList.remove('loading');
-      }, 10000);
+      // Added here, not in the HTML, so the video only downloads when it's going to play.
+      (function () {
+        var html = document.documentElement;
+        if (!html.classList.contains('intro')) return;
+
+        var intro = document.getElementById('intro');
+        var root = document.getElementById('root');
+        var video = document.createElement('video');
+        video.src = '%BASE_URL%intro.mp4';
+        video.muted = true;
+        video.playsInline = true;
+        video.autoplay = true;
+        video.setAttribute('aria-hidden', 'true');
+        intro.appendChild(video);
+        root.inert = true;
+
+        // If the app never starts, don't leave visitors stuck behind the video.
+        setTimeout(function () {
+          if (intro.dataset.running) return;
+          intro.remove();
+          root.inert = false;
+          html.classList.remove('intro');
+        }, 12000);
+      })();
     </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
