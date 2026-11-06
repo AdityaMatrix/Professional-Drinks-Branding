@@ -1,6 +1,7 @@
+import type { CSSProperties } from 'react';
 import { Link } from 'react-router';
 import { useCart } from '../cart/CartContext';
-import { formatPrice, getProductImage, type Product } from '../data/products';
+import { canTransitionName, formatPrice, getProductImage, type Product } from '../data/products';
 import { Button } from './Button';
 import { StockLabel } from './StockLabel';
 import styles from './ProductCard.module.css';
@@ -11,10 +12,11 @@ export function ProductCard({ product }: { product: Product }) {
   const atLimit = inCart >= product.stock;
 
   return (
-    <article className={styles.card}>
-      <div className={styles.imageBox} style={{ backgroundColor: product.color }}>
+    <article className={styles.card} style={{ '--drink': product.color } as CSSProperties}>
+      <div className={styles.imageBox}>
         <img
           className={styles.image}
+          style={{ viewTransitionName: canTransitionName(product.id) }}
           src={getProductImage(product)}
           alt=""
           loading="lazy"
@@ -22,9 +24,11 @@ export function ProductCard({ product }: { product: Product }) {
         />
       </div>
       <h2 className={styles.name}>
-        <Link to={`/products/${product.id}`}>{product.name}</Link>
+        <Link to={`/products/${product.id}`} viewTransition>
+          {product.name}
+        </Link>
       </h2>
-      <p>{formatPrice(product.priceCents)}</p>
+      <p className={styles.price}>{formatPrice(product.priceCents)}</p>
       <StockLabel stock={product.stock} />
       <Button
         className={styles.add}

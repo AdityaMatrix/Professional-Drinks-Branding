@@ -54,6 +54,9 @@ const images: Record<string, string> = {
 
 export const getProductImage = (product: Pick<Product, 'imageKey'>) => images[product.imageKey];
 
+/** Cans with the same name on two pages morph into each other during navigation. */
+export const canTransitionName = (id: string) => `can-${id}`;
+
 const priceFormat = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',

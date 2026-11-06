@@ -1,4 +1,4 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchProduct, fetchProducts } from '../api/products';
 import type { Product, ProductFilters } from '../data/products';
 
@@ -11,9 +11,20 @@ export function useProducts(filters: ProductFilters, placeholder?: Product[]) {
   });
 }
 
+/**
+ * Shows what the shop already fetched while the fresh copy loads. The can transition depends on
+ * this: the browser can only morph into a can that's on screen as soon as the page changes.
+ */
 export function useProduct(id: string) {
-  return useQuery({
+  const queryClient = useQueryClient();
+
+  return useQuery<Product | null>({
     queryKey: ['product', id],
     queryFn: ({ signal }) => fetchProduct(id, signal),
+    placeholderData: () =>
+      queryClient
+        .getQueriesData<Product[]>({ queryKey: ['products'] })
+        .flatMap(([, products]) => products ?? [])
+        .find((product) => product.id === id),
   });
 }

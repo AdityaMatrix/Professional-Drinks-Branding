@@ -1,0 +1,26 @@
+/* Redefining the base colours here restyles every shared component on these pages. */
+.store {
+  --color-ink: #ece8e3;
+  --color-paper: #0f1923;
+  --color-sand: #1c2935;
+  --line: rgb(255 255 255 / 14%);
+  --link: #ff8a9a;
+  --button-background: var(--color-brand);
+  --button-text: #0f1923;
+  --button-radius: 0;
+  --button-disabled-background: #24313d;
+  --button-disabled-text: #aab4bd;
+  --button-disabled-border: #4a5864;
+  --field-border: rgb(255 255 255 / 45%);
+  --stock-ok: #6fdc97;
+  --stock-low: #ffc36b;
+  --stock-out: #ff9aa8;
+
+  min-height: calc(100svh - var(--header-height));
+  background:
+    radial-gradient(60% 45% at 85% 0%, rgb(255 71 99 / 16%), transparent),
+    radial-gradient(50% 40% at 0% 100%, rgb(59 130 160 / 14%), transparent),
+    var(--color-paper);
+  color: var(--color-ink);
+  color-scheme: dark;
+}

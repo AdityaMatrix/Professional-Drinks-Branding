@@ -72,6 +72,19 @@ textarea {
   box-shadow: 0 0 0 2px var(--color-paper);
 }
 
+::view-transition-group(*) {
+  animation-duration: 0.45s;
+  animation-timing-function: cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;

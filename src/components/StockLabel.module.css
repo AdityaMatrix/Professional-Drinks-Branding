@@ -6,13 +6,13 @@
 }
 
 .inStock {
-  color: #1d6b32;
+  color: var(--stock-ok, #1d6b32);
 }
 
 .low {
-  color: #8a4b00;
+  color: var(--stock-low, #8a4b00);
 }
 
 .soldOut {
-  color: #b00020;
+  color: var(--stock-out, #b00020);
 }

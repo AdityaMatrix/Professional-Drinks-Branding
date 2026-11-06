@@ -3,7 +3,13 @@ import { useCart } from '../cart/CartContext';
 import { Button, buttonClass } from '../components/Button';
 import { QueryError } from '../components/QueryError';
 import stateStyles from '../components/StoreStates.module.css';
-import { defaultFilters, formatPrice, getProductImage, type Product } from '../data/products';
+import {
+  canTransitionName,
+  defaultFilters,
+  formatPrice,
+  getProductImage,
+  type Product,
+} from '../data/products';
 import { useProducts } from '../hooks/useProducts';
 import styles from './CartPage.module.css';
 
@@ -13,9 +19,14 @@ function CartLine({ product, quantity }: { product: Product; quantity: number })
 
   return (
     <li className={styles.line}>
-      <img className={styles.image} src={getProductImage(product)} alt="" />
+      <img
+        className={styles.image}
+        style={{ viewTransitionName: canTransitionName(product.id) }}
+        src={getProductImage(product)}
+        alt=""
+      />
       <div className={styles.details}>
-        <Link className={styles.name} to={`/products/${product.id}`}>
+        <Link className={styles.name} to={`/products/${product.id}`} viewTransition>
           {product.name}
         </Link>
         <p>{formatPrice(product.priceCents)} each</p>

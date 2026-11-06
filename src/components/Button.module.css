@@ -4,10 +4,10 @@
   justify-content: center;
   min-height: 44px;
   padding-inline: var(--space-4);
-  border: 2px solid var(--color-ink);
-  border-radius: var(--radius-sm);
-  background: var(--color-ink);
-  color: var(--color-paper);
+  border: 2px solid var(--button-background, var(--color-ink));
+  border-radius: var(--button-radius, var(--radius-sm));
+  background: var(--button-background, var(--color-ink));
+  color: var(--button-text, var(--color-paper));
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
@@ -19,6 +19,7 @@
 }
 
 .button[data-variant='secondary'] {
+  border-color: var(--color-ink);
   background: transparent;
   color: var(--color-ink);
 }
@@ -29,8 +30,8 @@
 }
 
 .button:disabled {
-  border-color: #767676;
-  background: #e5e5e5;
-  color: #595959;
+  border-color: var(--button-disabled-border, #767676);
+  background: var(--button-disabled-background, #e5e5e5);
+  color: var(--button-disabled-text, #595959);
   cursor: not-allowed;
 }

@@ -2,18 +2,14 @@ import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router';
 import { RequireStaff } from './auth/RequireStaff';
 import { Layout } from './components/Layout';
+import { StoreLayout } from './components/StoreLayout';
+import { CartPage } from './pages/CartPage';
 import { HomePage } from './pages/HomePage';
 import { NotFoundPage } from './pages/NotFoundPage';
+// Not lazy: a page that's still loading has no can on screen for the view transition to morph into.
+import { ProductDetailPage } from './pages/ProductDetailPage';
+import { ProductsPage } from './pages/ProductsPage';
 
-const ProductsPage = lazy(() =>
-  import('./pages/ProductsPage').then((module) => ({ default: module.ProductsPage })),
-);
-const ProductDetailPage = lazy(() =>
-  import('./pages/ProductDetailPage').then((module) => ({ default: module.ProductDetailPage })),
-);
-const CartPage = lazy(() =>
-  import('./pages/CartPage').then((module) => ({ default: module.CartPage })),
-);
 const LoginPage = lazy(() =>
   import('./pages/LoginPage').then((module) => ({ default: module.LoginPage })),
 );
@@ -43,9 +39,14 @@ export const router = createBrowserRouter(
       element: <Layout />,
       children: [
         { index: true, element: <HomePage /> },
-        { path: 'products', element: <ProductsPage /> },
-        { path: 'products/:id', element: <ProductDetailPage /> },
-        { path: 'cart', element: <CartPage /> },
+        {
+          element: <StoreLayout />,
+          children: [
+            { path: 'products', element: <ProductsPage /> },
+            { path: 'products/:id', element: <ProductDetailPage /> },
+            { path: 'cart', element: <CartPage /> },
+          ],
+        },
         { path: 'login', element: <LoginPage /> },
         {
           path: 'admin',

@@ -1,6 +1,6 @@
 import type { FocusEvent } from 'react';
 import { Link } from 'react-router';
-import { formatPrice, getProductImage, type Product } from '../data/products';
+import { canTransitionName, formatPrice, getProductImage, type Product } from '../data/products';
 import { getSlot } from '../hooks/carouselState';
 import { useCarousel } from '../hooks/useCarousel';
 import { buttonClass } from './Button';
@@ -52,7 +52,11 @@ export function HeroCarousel({ products, initialIndex = 1 }: Props) {
                   <h2 className={styles.name}>{product.name}</h2>
                   <p className={styles.price}>{formatPrice(product.priceCents)}</p>
                   <p className={styles.description}>{product.description}</p>
-                  <Link className={`${buttonClass} ${styles.shop}`} to={`/products/${product.id}`}>
+                  <Link
+                    className={`${buttonClass} ${styles.shop}`}
+                    to={`/products/${product.id}`}
+                    viewTransition
+                  >
                     View {product.name}
                   </Link>
                 </div>
@@ -60,6 +64,9 @@ export function HeroCarousel({ products, initialIndex = 1 }: Props) {
               <figure className={styles.figure}>
                 <img
                   className={styles.can}
+                  style={{
+                    viewTransitionName: slot === 'active' ? canTransitionName(product.id) : 'none',
+                  }}
                   src={getProductImage(product)}
                   alt={`${product.name} can featuring ${product.agent}`}
                   decoding="async"

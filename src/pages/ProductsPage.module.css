@@ -3,7 +3,7 @@
   max-width: 1200px;
   min-height: 70svh;
   margin-inline: auto;
-  padding: var(--space-8) var(--space-6);
+  padding: var(--space-8) var(--space-6) var(--space-12);
 }
 
 .heading {
@@ -32,11 +32,15 @@
   width: 100%;
   min-height: 44px;
   padding-inline: var(--space-3);
-  border: 1px solid #767676;
-  border-radius: var(--radius-sm);
-  background: var(--color-paper);
+  border: 1px solid var(--field-border, #767676);
+  background: rgb(255 255 255 / 5%);
+  color: var(--color-ink);
   font: inherit;
   font-weight: 400;
+}
+
+.filter option {
+  background: var(--color-paper);
 }
 
 .grid {

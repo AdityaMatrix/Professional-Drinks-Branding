@@ -3,7 +3,7 @@
   max-width: 900px;
   min-height: 70svh;
   margin-inline: auto;
-  padding: var(--space-8) var(--space-6);
+  padding: var(--space-8) var(--space-6) var(--space-12);
 }
 
 .heading {
@@ -20,7 +20,7 @@
   align-items: center;
   gap: var(--space-4);
   padding-block: var(--space-4);
-  border-bottom: 1px solid rgb(0 0 0 / 15%);
+  border-bottom: 1px solid var(--line);
 }
 
 .image {
@@ -41,7 +41,7 @@
 }
 
 .name:hover {
-  text-decoration: underline;
+  color: var(--color-brand);
 }
 
 .stepper {
@@ -70,7 +70,7 @@
 }
 
 .warning {
-  color: #8a4b00;
+  color: var(--stock-low);
   font-size: 0.875rem;
   font-weight: 600;
 }

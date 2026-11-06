@@ -1,10 +1,11 @@
+import type { CSSProperties } from 'react';
 import { Link, useParams } from 'react-router';
 import { useCart } from '../cart/CartContext';
 import { Button } from '../components/Button';
 import { QueryError } from '../components/QueryError';
 import { StockLabel } from '../components/StockLabel';
 import stateStyles from '../components/StoreStates.module.css';
-import { formatPrice, getProductImage, type Product } from '../data/products';
+import { canTransitionName, formatPrice, getProductImage, type Product } from '../data/products';
 import { useProduct } from '../hooks/useProducts';
 import styles from './ProductDetailPage.module.css';
 
@@ -16,9 +17,14 @@ function ProductDetails({ product }: { product: Product }) {
   return (
     <div className={styles.layout}>
       <title>{`${product.name} | Valo Drinks`}</title>
-      <div className={styles.imageBox} style={{ backgroundColor: product.color }}>
+      <div
+        className={styles.imageBox}
+        style={{ '--drink': product.color } as CSSProperties}
+        data-agent={product.agent}
+      >
         <img
           className={styles.image}
+          style={{ viewTransitionName: canTransitionName(product.id) }}
           src={getProductImage(product)}
           alt={`${product.name} can featuring ${product.agent}`}
         />
@@ -43,7 +49,9 @@ export function ProductDetailPage() {
 
   return (
     <div className={styles.page}>
-      <Link to="/products">Back to shop</Link>
+      <Link className={styles.back} to="/products" viewTransition>
+        Back to shop
+      </Link>
 
       {product.isPending && (
         <div
