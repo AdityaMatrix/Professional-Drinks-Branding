@@ -38,8 +38,17 @@ const ordering: Record<SortKey, { column: string; ascending: boolean }> = {
   'price-desc': { column: 'price_cents', ascending: false },
 };
 
-/** % and _ are wildcards in ilike, so a search for "100%" must match them literally. */
-const escapeLike = (text: string) => text.replace(/[\\%_]/g, '\\$&');
+/**
+ * Builds the ilike pattern, or null if there's nothing to search for. Wildcards are removed, not
+ * escaped: a backslash escape didn't survive the API, so a search for "%" matched every drink.
+ */
+export function toSearchPattern(text: string): string | null {
+  const search = text
+    .replace(/[%_*\\]/g, ' ')
+    .trim()
+    .toLowerCase();
+  return search ? `%${search}%` : null;
+}
 
 export async function fetchProducts(
   filters: ProductFilters,
@@ -49,8 +58,8 @@ export async function fetchProducts(
   let query = supabase.from('products').select(COLUMNS);
 
   if (filters.role) query = query.eq('role', filters.role);
-  const search = filters.q.trim().toLowerCase();
-  if (search) query = query.ilike('search_text', `%${escapeLike(search)}%`);
+  const pattern = toSearchPattern(filters.q);
+  if (pattern) query = query.ilike('search_text', pattern);
 
   query = query.order(column, { ascending }).order('id');
   if (signal) query = query.abortSignal(signal);
