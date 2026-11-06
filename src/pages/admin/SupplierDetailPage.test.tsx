@@ -10,7 +10,7 @@ import type { Supplier } from '../../data/suppliers';
 import { renderApp, signedInStaff } from '../../test/render';
 import { SupplierDetailPage } from './SupplierDetailPage';
 
-vi.mock('../../lib/supabase', () => ({ supabase: {} }));
+vi.mock('../../lib/supabase', () => ({ getSupabase: vi.fn() }));
 vi.mock('../../api/suppliers', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../../api/suppliers')>()),
   fetchSupplier: vi.fn(),

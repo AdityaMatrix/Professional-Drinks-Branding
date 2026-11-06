@@ -48,6 +48,10 @@
   gap: var(--space-6);
 }
 
+.cart {
+  display: inline-block;
+}
+
 .nav a,
 .cart {
   color: var(--color-ink);

@@ -1,0 +1,174 @@
+.page {
+  width: 100%;
+  max-width: 1040px;
+  min-height: 70svh;
+  margin-inline: auto;
+  padding: var(--space-8) var(--space-6) var(--space-12);
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.demoNotice {
+  margin-block: var(--space-2) var(--space-6);
+  color: var(--stock-low);
+  font-weight: 600;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  max-width: 480px;
+  margin-bottom: var(--space-8);
+}
+
+.steps li {
+  padding-top: var(--space-2);
+  border-top: 4px solid var(--line);
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+.steps li[data-state='done'] {
+  border-top-color: var(--stock-ok);
+}
+
+.steps li[data-state='current'] {
+  border-top-color: var(--color-brand);
+  font-weight: 600;
+  opacity: 1;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  align-items: start;
+  gap: var(--space-8);
+}
+
+.form {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-4);
+}
+
+.sectionHeading {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 400;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-2);
+}
+
+.link {
+  color: var(--link);
+}
+
+.summary {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: rgb(255 255 255 / 5%);
+}
+
+.summaryLines {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.summaryLines li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.totals {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-1) var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--line);
+}
+
+.totals dd {
+  text-align: right;
+}
+
+.total {
+  margin-top: var(--space-2);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.skeleton {
+  height: 160px;
+}
+
+.warning {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-left: 4px solid var(--stock-low);
+  background: rgb(255 195 107 / 10%);
+}
+
+.testCards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.failure {
+  min-height: 1.5em;
+  color: var(--stock-out);
+  font-weight: 600;
+}
+
+.confirmation {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+  max-width: 560px;
+}
+
+.confirmation .summary {
+  justify-self: stretch;
+}
+
+.confirmationHeading {
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+@media (max-width: 760px) {
+  .page {
+    padding-inline: var(--space-4);
+  }
+
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The total stays visible above the form on a phone. */
+  .layout > aside {
+    order: -1;
+  }
+}

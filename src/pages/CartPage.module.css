@@ -82,6 +82,12 @@
   text-align: right;
 }
 
+.checkout {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-4);
+}
+
 .skeleton {
   height: 240px;
 }

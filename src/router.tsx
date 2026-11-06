@@ -10,6 +10,22 @@ import { NotFoundPage } from './pages/NotFoundPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { ProductsPage } from './pages/ProductsPage';
 
+const CheckoutLayout = lazy(() =>
+  import('./pages/checkout/CheckoutLayout').then((module) => ({ default: module.CheckoutLayout })),
+);
+const CheckoutDetailsPage = lazy(() =>
+  import('./pages/checkout/CheckoutDetailsPage').then((module) => ({
+    default: module.CheckoutDetailsPage,
+  })),
+);
+const PaymentPage = lazy(() =>
+  import('./pages/checkout/PaymentPage').then((module) => ({ default: module.PaymentPage })),
+);
+const ConfirmationPage = lazy(() =>
+  import('./pages/checkout/ConfirmationPage').then((module) => ({
+    default: module.ConfirmationPage,
+  })),
+);
 const LoginPage = lazy(() =>
   import('./pages/LoginPage').then((module) => ({ default: module.LoginPage })),
 );
@@ -45,6 +61,15 @@ export const router = createBrowserRouter(
             { path: 'products', element: <ProductsPage /> },
             { path: 'products/:id', element: <ProductDetailPage /> },
             { path: 'cart', element: <CartPage /> },
+            {
+              path: 'checkout',
+              element: <CheckoutLayout />,
+              children: [
+                { index: true, element: <CheckoutDetailsPage /> },
+                { path: 'payment', element: <PaymentPage /> },
+                { path: 'confirmation', element: <ConfirmationPage /> },
+              ],
+            },
           ],
         },
         { path: 'login', element: <LoginPage /> },

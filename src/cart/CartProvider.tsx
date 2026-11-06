@@ -40,6 +40,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       setQuantity: (id: string, quantity: number, max: number) =>
         dispatch({ type: 'setQuantity', id, quantity, max }),
       remove: (id: string) => dispatch({ type: 'remove', id }),
+      clear: () => dispatch({ type: 'replace', items: {} }),
     }),
     [items],
   );

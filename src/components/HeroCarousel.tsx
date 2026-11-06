@@ -1,6 +1,12 @@
 import type { FocusEvent } from 'react';
 import { Link } from 'react-router';
-import { canTransitionName, formatPrice, getProductImage, type Product } from '../data/products';
+import {
+  canSize,
+  canTransitionName,
+  formatPrice,
+  getProductImage,
+  type Product,
+} from '../data/products';
 import { getSlot } from '../hooks/carouselState';
 import { useCarousel } from '../hooks/useCarousel';
 import { buttonClass } from './Button';
@@ -69,6 +75,7 @@ export function HeroCarousel({ products, initialIndex = 1 }: Props) {
                   }}
                   src={getProductImage(product)}
                   alt={`${product.name} can featuring ${product.agent}`}
+                  {...canSize}
                   decoding="async"
                   fetchPriority={index === initialIndex ? 'high' : 'auto'}
                 />

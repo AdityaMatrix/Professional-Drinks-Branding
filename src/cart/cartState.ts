@@ -9,6 +9,9 @@ export type CartAction =
   | { type: 'remove'; id: string }
   | { type: 'replace'; items: CartItems };
 
+export const toOrderItems = (items: CartItems) =>
+  Object.entries(items).map(([id, quantity]) => ({ id, quantity }));
+
 const without = (items: CartItems, id: string) =>
   Object.fromEntries(Object.entries(items).filter(([key]) => key !== id));
 

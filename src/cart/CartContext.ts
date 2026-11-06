@@ -7,6 +7,7 @@ type CartContextValue = {
   add: (id: string, max: number) => void;
   setQuantity: (id: string, quantity: number, max: number) => void;
   remove: (id: string) => void;
+  clear: () => void;
 };
 
 export const CartContext = createContext<CartContextValue | null>(null);

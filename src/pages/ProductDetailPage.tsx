@@ -1,18 +1,26 @@
-import type { CSSProperties } from 'react';
+import { useRef, type CSSProperties } from 'react';
 import { Link, useParams } from 'react-router';
 import { useCart } from '../cart/CartContext';
 import { Button } from '../components/Button';
 import { QueryError } from '../components/QueryError';
 import { StockLabel } from '../components/StockLabel';
 import stateStyles from '../components/StoreStates.module.css';
-import { canTransitionName, formatPrice, getProductImage, type Product } from '../data/products';
+import {
+  canSize,
+  canTransitionName,
+  formatPrice,
+  getProductImage,
+  type Product,
+} from '../data/products';
 import { useProduct } from '../hooks/useProducts';
+import { flyToCart } from '../lib/flyToCart';
 import styles from './ProductDetailPage.module.css';
 
 function ProductDetails({ product }: { product: Product }) {
   const { items, add } = useCart();
   const inCart = items[product.id] ?? 0;
   const atLimit = inCart >= product.stock;
+  const image = useRef<HTMLImageElement>(null);
 
   return (
     <div className={styles.layout}>
@@ -23,10 +31,12 @@ function ProductDetails({ product }: { product: Product }) {
         data-agent={product.agent}
       >
         <img
+          ref={image}
           className={styles.image}
           style={{ viewTransitionName: canTransitionName(product.id) }}
           src={getProductImage(product)}
           alt={`${product.name} can featuring ${product.agent}`}
+          {...canSize}
         />
       </div>
       <div className={styles.info}>
@@ -34,7 +44,13 @@ function ProductDetails({ product }: { product: Product }) {
         <p className={styles.price}>{formatPrice(product.priceCents)}</p>
         <StockLabel stock={product.stock} />
         <p>{product.description}</p>
-        <Button onClick={() => add(product.id, product.stock)} disabled={atLimit}>
+        <Button
+          onClick={() => {
+            add(product.id, product.stock);
+            flyToCart(image.current);
+          }}
+          disabled={atLimit}
+        >
           {product.stock === 0 ? 'Sold out' : atLimit ? 'All in cart' : 'Add to cart'}
         </Button>
         <p role="status">{inCart > 0 && `${inCart} in your cart`}</p>

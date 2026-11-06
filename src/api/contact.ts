@@ -1,5 +1,5 @@
 import type { ContactValues } from '../data/contactSchema';
-import { supabase } from '../lib/supabase';
+import { getSupabase } from '../lib/supabase';
 
 /** The server refused the message for a reason the visitor can act on. */
 export class ContactRejectedError extends Error {
@@ -23,6 +23,7 @@ const constraintErrors: Record<string, { field: keyof ContactValues; message: st
 };
 
 export async function sendContactMessage(values: ContactValues): Promise<void> {
+  const supabase = await getSupabase();
   // No .select() afterwards: visitors can insert but have no permission to read rows back.
   const { error } = await supabase
     .from('contact_messages')

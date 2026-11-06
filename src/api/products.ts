@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { roles, type Product, type ProductFilters, type SortKey } from '../data/products';
-import { supabase } from '../lib/supabase';
+import { getSupabase } from '../lib/supabase';
 
 const COLUMNS = 'id, name, agent, role, price_cents, description, color, image_key, stock';
 
@@ -54,6 +54,7 @@ export async function fetchProducts(
   filters: ProductFilters,
   signal?: AbortSignal,
 ): Promise<Product[]> {
+  const supabase = await getSupabase();
   const { column, ascending } = ordering[filters.sort];
   let query = supabase.from('products').select(COLUMNS);
 
@@ -70,6 +71,7 @@ export async function fetchProducts(
 }
 
 export async function fetchProduct(id: string, signal?: AbortSignal): Promise<Product | null> {
+  const supabase = await getSupabase();
   let query = supabase.from('products').select(COLUMNS).eq('id', id);
   if (signal) query = query.abortSignal(signal);
 

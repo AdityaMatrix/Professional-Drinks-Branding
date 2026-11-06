@@ -91,6 +91,9 @@ export function CartPage() {
     0,
   );
 
+  const canCheckOut =
+    missing.length === 0 && lines.every(({ product, quantity }) => quantity <= product.stock);
+
   return (
     <div className={styles.page}>
       <title>Cart | Valo Drinks</title>
@@ -144,6 +147,15 @@ export function CartPage() {
           )}
 
           <p className={styles.subtotal}>Subtotal: {formatPrice(subtotal)}</p>
+          <div className={styles.checkout}>
+            {canCheckOut ? (
+              <Link className={buttonClass} to="/checkout">
+                Go to checkout
+              </Link>
+            ) : (
+              <p className={styles.warning}>Fix the items above to continue to checkout.</p>
+            )}
+          </div>
         </>
       )}
     </div>

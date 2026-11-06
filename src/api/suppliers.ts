@@ -11,7 +11,7 @@ import {
   type SupplierFilters,
   type SupplierStatus,
 } from '../data/suppliers';
-import { supabase } from '../lib/supabase';
+import { getSupabase } from '../lib/supabase';
 import { toSearchPattern } from './products';
 
 const COLUMNS =
@@ -78,6 +78,7 @@ const eventRow = z
 const PAGE_OUT_OF_RANGE = 'PGRST103';
 
 export async function fetchSuppliers(filters: SupplierFilters, signal?: AbortSignal) {
+  const supabase = await getSupabase();
   const from = (filters.page - 1) * PAGE_SIZE;
   let query = supabase.from('suppliers').select(COLUMNS, { count: 'exact' });
 
@@ -101,6 +102,7 @@ export async function fetchSuppliers(filters: SupplierFilters, signal?: AbortSig
 }
 
 export async function fetchSupplier(id: string, signal?: AbortSignal) {
+  const supabase = await getSupabase();
   let query = supabase.from('suppliers').select(COLUMNS).eq('id', id);
   if (signal) query = query.abortSignal(signal);
 
@@ -110,6 +112,7 @@ export async function fetchSupplier(id: string, signal?: AbortSignal) {
 }
 
 export async function fetchSupplierEvents(id: string, signal?: AbortSignal) {
+  const supabase = await getSupabase();
   let query = supabase
     .from('supplier_events')
     .select('id, from_status, to_status, note, actor, created_at')
@@ -129,6 +132,7 @@ const summaryRow = z.object({
 });
 
 export async function fetchSupplierSummary(signal?: AbortSignal) {
+  const supabase = await getSupabase();
   let query = supabase.from('suppliers').select('status, risk_level');
   if (signal) query = query.abortSignal(signal);
 
@@ -222,6 +226,7 @@ function toSaveError(error: PostgrestError) {
 }
 
 export async function createSupplier(values: SupplierPatch) {
+  const supabase = await getSupabase();
   const { data, error } = await supabase
     .from('suppliers')
     .insert(toRow(values))
@@ -232,6 +237,7 @@ export async function createSupplier(values: SupplierPatch) {
 }
 
 export async function updateSupplier(id: string, patch: SupplierPatch) {
+  const supabase = await getSupabase();
   const { data, error } = await supabase
     .from('suppliers')
     .update(toRow(patch))
@@ -245,6 +251,7 @@ export async function updateSupplier(id: string, patch: SupplierPatch) {
 }
 
 export async function deleteSupplierDraft(id: string) {
+  const supabase = await getSupabase();
   const { data, error } = await supabase.from('suppliers').delete().eq('id', id).select('id');
   if (error) throw new Error(error.message);
   if (data.length === 0) {
@@ -267,6 +274,7 @@ export async function transitionSupplier(input: {
   toStatus: SupplierStatus;
   note?: string;
 }) {
+  const supabase = await getSupabase();
   const { error } = await supabase.rpc('transition_supplier', {
     p_id: input.id,
     p_expected_status: input.expectedStatus,
@@ -283,11 +291,13 @@ export async function transitionSupplier(input: {
 }
 
 export async function resetDemoData() {
+  const supabase = await getSupabase();
   const { error } = await supabase.rpc('reset_demo_data');
   if (error) throw new Error(error.message);
 }
 
 export async function fetchIsStaff() {
+  const supabase = await getSupabase();
   const { data, error } = await supabase.rpc('is_staff');
   if (error) throw new Error(error.message);
   return z.boolean().parse(data);

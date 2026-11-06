@@ -1,6 +1,6 @@
 import { toSearchPattern } from './products';
 
-vi.mock('../lib/supabase', () => ({ supabase: {} }));
+vi.mock('../lib/supabase', () => ({ getSupabase: vi.fn() }));
 
 describe('toSearchPattern', () => {
   it('wraps a lowercased search in wildcards', () => {

@@ -48,6 +48,7 @@ export function Layout() {
         <div className={styles.headerEnd}>
           <Link
             className={styles.cart}
+            data-cart-target
             to="/cart"
             aria-label={`Cart, ${count} ${count === 1 ? 'item' : 'items'}`}
             onClick={closeMenu}

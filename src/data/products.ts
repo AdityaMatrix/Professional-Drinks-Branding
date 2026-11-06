@@ -54,6 +54,9 @@ const images: Record<string, string> = {
 
 export const getProductImage = (product: Pick<Product, 'imageKey'>) => images[product.imageKey];
 
+/** The can files' real size, so the browser can reserve the space before they load. */
+export const canSize = { width: 502, height: 900 };
+
 /** Cans with the same name on two pages morph into each other during navigation. */
 export const canTransitionName = (id: string) => `can-${id}`;
 

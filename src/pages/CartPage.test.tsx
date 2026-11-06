@@ -49,6 +49,23 @@ describe('CartPage', () => {
     expect(screen.getByLabelText(`Quantity of ${drink.name}`)).toHaveTextContent('2');
   });
 
+  it('offers checkout when the cart is ready', async () => {
+    seedCart({ [drink.id]: 2 });
+    fetchMock.mockResolvedValue([{ ...drink, stock: 10 }]);
+    renderApp(<CartPage />);
+
+    expect(await screen.findByRole('link', { name: 'Go to checkout' })).toBeInTheDocument();
+  });
+
+  it('holds back checkout until a stock problem is fixed', async () => {
+    seedCart({ [drink.id]: 5 });
+    fetchMock.mockResolvedValue([{ ...drink, stock: 2 }]);
+    renderApp(<CartPage />);
+
+    await screen.findByText(/Fix the items above/);
+    expect(screen.queryByRole('link', { name: 'Go to checkout' })).not.toBeInTheDocument();
+  });
+
   it('leaves a sold-out line out of the subtotal', async () => {
     seedCart({ [drink.id]: 1 });
     fetchMock.mockResolvedValue([{ ...drink, stock: 0 }]);

@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { ContactRejectedError, sendContactMessage } from '../api/contact';
 import { ContactForm } from './ContactForm';
 
-vi.mock('../lib/supabase', () => ({ supabase: {} }));
+vi.mock('../lib/supabase', () => ({ getSupabase: vi.fn() }));
 vi.mock('../api/contact', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../api/contact')>()),
   sendContactMessage: vi.fn(),
