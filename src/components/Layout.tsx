@@ -1,6 +1,7 @@
-import { Suspense, useEffect, useRef } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router';
 import logo from '../assets/images/logo.webp';
+import { useAuth } from '../auth/AuthContext';
 import { useCart } from '../cart/CartContext';
 import styles from './Layout.module.css';
 
@@ -30,6 +31,9 @@ function useScrollOnNavigate() {
 export function Layout() {
   useScrollOnNavigate();
   const { count } = useCart();
+  const { status } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <>
@@ -37,19 +41,42 @@ export function Layout() {
         Skip to content
       </a>
       <header className={styles.header}>
-        <Link to="/" aria-label="Valo Drinks home">
+        <Link to="/" aria-label="Valo Drinks home" onClick={closeMenu}>
           <img className={styles.logo} src={logo} alt="" width={72} height={40} />
         </Link>
-        <nav aria-label="Main">
+
+        <div className={styles.headerEnd}>
+          <Link
+            className={styles.cart}
+            to="/cart"
+            aria-label={`Cart, ${count} ${count === 1 ? 'item' : 'items'}`}
+            onClick={closeMenu}
+          >
+            Cart{count > 0 && <span className={styles.badge}>{count}</span>}
+          </Link>
+          <button
+            type="button"
+            className={styles.menuButton}
+            aria-expanded={menuOpen}
+            aria-controls="main-nav"
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            Menu
+          </button>
+        </div>
+
+        <nav id="main-nav" className={styles.navWrap} aria-label="Main" data-open={menuOpen}>
           <ul className={styles.nav}>
             {navLinks.map((link) => (
               <li key={link.to}>
-                <Link to={link.to}>{link.label}</Link>
+                <Link to={link.to} onClick={closeMenu}>
+                  {link.label}
+                </Link>
               </li>
             ))}
             <li>
-              <Link to="/cart" aria-label={`Cart, ${count} ${count === 1 ? 'item' : 'items'}`}>
-                Cart{count > 0 && <span className={styles.badge}>{count}</span>}
+              <Link to="/admin" onClick={closeMenu}>
+                {status === 'signedIn' ? 'Portal' : 'Log in'}
               </Link>
             </li>
           </ul>

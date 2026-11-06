@@ -11,5 +11,10 @@ export default defineConfig({
     globals: true,
     setupFiles: './src/test/setup.ts',
     css: { modules: { classNameStrategy: 'non-scoped' } },
+    // Placeholders so tests run in CI. Nothing in the suite talks to a real project.
+    env: {
+      VITE_SUPABASE_URL: 'https://test.supabase.co',
+      VITE_SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_test',
+    },
   },
 });

@@ -1,0 +1,42 @@
+.badge {
+  display: inline-block;
+  padding: 2px var(--space-2);
+  border-radius: 999px;
+  background: #e5e5e5;
+  color: var(--color-ink);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge[data-tone='submitted'] {
+  background: #dbe8fb;
+  color: #123a73;
+}
+
+.badge[data-tone='in_review'] {
+  background: #f8e8c4;
+  color: #5e3b00;
+}
+
+.badge[data-tone='approved'],
+.badge[data-tone='risk-low'] {
+  background: #d5efdc;
+  color: #114d22;
+}
+
+.badge[data-tone='risk-medium'] {
+  background: #f8e8c4;
+  color: #5e3b00;
+}
+
+.badge[data-tone='rejected'],
+.badge[data-tone='risk-high'] {
+  background: #fbdada;
+  color: #7c0016;
+}
+
+.none {
+  color: #595959;
+  font-size: 0.8125rem;
+}

@@ -40,7 +40,7 @@ export function parseFilters(params: URLSearchParams): ProductFilters {
   const sort = params.get('sort');
   return {
     role: roles.find((value) => value === role) ?? null,
-    sort: sort && sort in sortLabels ? (sort as SortKey) : 'featured',
+    sort: sort && Object.hasOwn(sortLabels, sort) ? (sort as SortKey) : 'featured',
     q: (params.get('q') ?? '').slice(0, 50),
   };
 }

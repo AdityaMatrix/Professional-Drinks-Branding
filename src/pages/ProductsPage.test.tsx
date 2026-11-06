@@ -63,7 +63,7 @@ describe('ProductsPage', () => {
 
   it('falls back to defaults for unknown URL values', async () => {
     fetchMock.mockResolvedValue(stocked);
-    renderApp(<ProductsPage />, { route: '/products?role=hacker&sort=drop-table' });
+    renderApp(<ProductsPage />, { route: '/products?role=hacker&sort=toString' });
 
     await screen.findByRole('link', { name: 'Pink Blaze' });
 

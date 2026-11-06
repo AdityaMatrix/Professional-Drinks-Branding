@@ -8,27 +8,28 @@
   font-weight: 600;
 }
 
+/* A parent can restyle fields for a dark background by setting these variables. */
 .input {
   width: 100%;
   min-height: 44px;
   padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--color-cream);
+  border: 1px solid var(--field-border, #767676);
   border-radius: var(--radius-sm);
-  background: var(--color-ink);
-  color: var(--color-paper);
+  background: var(--field-background, var(--color-paper));
+  color: var(--field-text, var(--color-ink));
   resize: vertical;
 }
 
 .input:focus-visible {
-  outline-color: var(--color-cream);
+  outline-color: var(--field-focus, var(--color-ink));
   box-shadow: none;
 }
 
 .input[aria-invalid='true'] {
-  border-color: var(--color-error);
+  border-color: var(--field-error, #b00020);
 }
 
 .error {
-  color: var(--color-error);
+  color: var(--field-error, #b00020);
   font-size: 0.875rem;
 }

@@ -1,0 +1,18 @@
+.modal {
+  width: min(480px, calc(100vw - 2 * var(--space-4)));
+  margin: auto;
+  padding: var(--space-6);
+  border: 0;
+  border-radius: var(--radius-sm);
+}
+
+.modal::backdrop {
+  background: rgb(0 0 0 / 55%);
+}
+
+.title {
+  margin-bottom: var(--space-3);
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 400;
+}

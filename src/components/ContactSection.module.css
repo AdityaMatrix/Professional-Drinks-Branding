@@ -17,6 +17,12 @@
 }
 
 .box {
+  --field-background: var(--color-ink);
+  --field-text: var(--color-paper);
+  --field-border: var(--color-cream);
+  --field-focus: var(--color-cream);
+  --field-error: var(--color-error);
+
   position: relative;
   display: flex;
   flex-wrap: wrap;
