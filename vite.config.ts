@@ -10,6 +10,7 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: './src/test/setup.ts',
+    include: ['src/**/*.test.{ts,tsx}'],
     // Typing through forms is slow in jsdom. These stop a busy machine failing tests on timing.
     testTimeout: 20_000,
     maxWorkers: 4,
