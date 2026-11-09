@@ -3,7 +3,7 @@
 A fan-concept drinks store with a supplier onboarding and risk portal, built with React and
 TypeScript on a real Supabase backend.
 
-**[Live site](https://adityamatrix.github.io/Professional-Drinks-Branding/)**. To see the portal,
+**Live site**: deployed on Vercel (add your Vercel URL here). To see the portal,
 choose **Log in**, then **Try the demo**.
 
 This started as a static HTML, CSS and JavaScript landing page. I rebuilt it to practise the things
@@ -146,8 +146,6 @@ browser matter.
 
 - The intro video adds about 7 seconds to the first visit in a session. That's a deliberate branding
   choice, and it can be skipped.
-- GitHub Pages has no server routing, so direct links like `/products` load the app through its
-  404 page. They work normally, but the HTTP status is 404, which a real host would fix.
 - The Supabase free plan can pause inactive projects, which would stop the API until it's restored.
 - The demo account is shared, so anyone can change the sample suppliers. Reset them from the
   dashboard.
